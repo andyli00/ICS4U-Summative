@@ -1,10 +1,5 @@
 package features;
 
-import javafx.application.Application;
-import javafx.scene.Scene;
-import javafx.scene.layout.StackPane;
-import javafx.stage.Stage;
-
 import javax.swing.*;
 import java.util.ArrayList;
 import java.io.File;
@@ -21,19 +16,12 @@ import java.nio.ByteBuffer;
  * @author Andy Li
  * @since Nov 17, 2017
  */
-public class NoteManager extends Application {
+public class NoteManager {
 	
 	private ArrayList<Note> notes = new ArrayList<>(1);
 	
-	@Override
-	public void start(Stage primaryStage) {
+	public NoteManager() {
 		run();
-		Scene scene = new Scene(new StackPane());
-		primaryStage.setScene(scene);
-	}
-	
-	public static void main(String[] args) {
-		launch(args);
 	}
 	
 	/**
@@ -124,6 +112,8 @@ public class NoteManager extends Application {
 		showAll();
 		
 		//when the program is closed, makes sure the notes are saved
+		//a shutdown hook basically holds off on closing the program
+		//until a certain action is performed (saving the all notes in this case)
 		Runtime.getRuntime().addShutdownHook(new Thread(this::saveNotes));
 	}
 	
