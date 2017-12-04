@@ -32,13 +32,20 @@ class Note {
 	private Button deleteButton;
 	private NoteManager manager;
 	
-	
+	/**
+	 * Constructor
+	 * @param content initial text on the note
+	 * @param manager a NoteManager object
+	 */
 	Note(String content, NoteManager manager) {
 		initializeComponents();
 		loadText(content);
 		this.manager = manager;
 	}
 	
+	/**
+	 * creates the gui of a note
+	 */
 	private void initializeComponents() {
 		window = new Stage(StageStyle.DECORATED);
 		pane = new BorderPane();
@@ -47,7 +54,7 @@ class Note {
 		newButton = new Button("New");
 		newButton.setFont(f);
 		newButton.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> newButtonClicked());
-				
+		
 		showAll = new Button("Show all");
 		showAll.setFont(f);
 		showAll.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> showAllClicked());
@@ -89,32 +96,58 @@ class Note {
 		window.show();
 	}
 	
+	/**
+	 * calls the manager to delete this note
+	 */
 	private void delete() {
 		this.manager.delete(this);
 	}
 	
+	/**
+	 * loads text onto the note
+	 * @param bodyText text to be loaded
+	 */
 	private void loadText(String bodyText) {
 		this.bodyText.setText(bodyText);
 	}
 	
+	/**
+	 * @return content of the note
+	 */
 	String getText() {
 		return bodyText.getText();
 	}
 	
+	/**
+	 * called when the new button is pressed
+	 * calls manager to create a new note
+	 */
 	private void newButtonClicked() {
 		manager.create("");
 	}
 	
+	/**
+	 * called when the show all button is pressed
+	 * calls manager to show all opened notes
+	 */
 	private void showAllClicked() {
 		manager.showAll();
 	}
 	
+	/**
+	 * called when the hide button is pressed
+	 * calls manager to hide this note
+	 */
 	private void hideButtonClicked() {
 		window.hide();
 		if (manager.allHidden())
 			window.close();
 	}
 	
+	/**
+	 * called when the delete button is pressed
+	 * calls the delete method
+	 */
 	private void deleteButtonClicked() {
 		delete();
 	}
