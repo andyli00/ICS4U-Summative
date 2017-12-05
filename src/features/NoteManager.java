@@ -1,6 +1,7 @@
 package features;
 
-import javax.swing.*;
+import utilities.FxDialog;
+
 import java.util.ArrayList;
 import java.io.File;
 import java.io.IOException;
@@ -70,7 +71,7 @@ public class NoteManager {
 				try {
 					create(readFile(note.getPath(), Charset.forName("UTF-8")));
 				} catch (IOException e) {
-					JOptionPane.showMessageDialog(null, e.getMessage(), "File error", JOptionPane.ERROR_MESSAGE);
+					FxDialog.showError("Error loading note:", e.getMessage());
 				}
 			}
 	}
@@ -95,7 +96,7 @@ public class NoteManager {
 				writer.write(note.getText());
 				writer.close();
 			} catch (FileNotFoundException e) {
-				JOptionPane.showMessageDialog(null, e.getMessage(), "File error", JOptionPane.ERROR_MESSAGE);
+				FxDialog.showError("Error saving note:", e.getMessage());
 			}
 		}
 	}

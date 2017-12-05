@@ -1,5 +1,7 @@
 package features;
 
+import utilities.FxDialog;
+
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
@@ -11,7 +13,6 @@ import javafx.scene.input.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-
 
 /**
  * A GUI class that creates a desktop sticky note
@@ -149,6 +150,7 @@ class Note {
 	 * calls the delete method
 	 */
 	private void deleteButtonClicked() {
-		delete();
+		if (FxDialog.showConfirmation("Are you sure?", "You are about to delete a note. This cannot be undone.").equals(FxDialog.OK))
+			delete();
 	}
 }
