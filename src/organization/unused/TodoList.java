@@ -1,12 +1,13 @@
-package organization;
+/*package organization;
 
 import java.util.Vector;
 
 /**
  * Essentially a list of task objects
+ * NOT TO BE USED ANYMORE. Only keeping the code just in case I need to reference it.
  * @author Andy Li
  * @since Oct 30, 2017
- */
+ *
 public class TodoList extends Task {
 	
 	private final int size;
@@ -18,7 +19,7 @@ public class TodoList extends Task {
 	 * Constructor
 	 * @param name name of the TodoList
 	 * @param size how many tasks it can contain
-	 */
+	 *
 	public TodoList(String name, int size) {
 		super(name);
 		this.size = size;
@@ -28,7 +29,7 @@ public class TodoList extends Task {
 	/**
 	 * Constructor if no size is specified
 	 * @param name name of the TodoList
-	 */
+	 *
 	public TodoList(String name) {
 		super(name);
 		this.size = 10; //default to 10
@@ -38,7 +39,7 @@ public class TodoList extends Task {
 	/**
 	 * Constructor if no name is specified
 	 * @param size how many tasks it can contain
-	 */
+	 *
 	public TodoList(int size) {
 		super();
 		this.size = size;
@@ -47,7 +48,7 @@ public class TodoList extends Task {
 	
 	/**
 	 * @return size of the TodoList
-	 */
+	 *
 	public int getSize() {
 		return size;
 	}
@@ -56,7 +57,7 @@ public class TodoList extends Task {
 	 * Adds a new task at a specified index
 	 * @param t 	a task object
 	 * @param index	the index at which to add the task
-	 */
+	 *
 	public void addNewTask(Task t, int index) 	{
 		taskList.set(index, t);
 	}
@@ -64,7 +65,7 @@ public class TodoList extends Task {
 	/**
 	 * marks a task as complete
 	 * @param index index at which to mark task complete
-	 */
+	 *
 	public void markTaskComplete(int index) {
 		taskList.elementAt(index).markComplete();
 	}
@@ -72,8 +73,8 @@ public class TodoList extends Task {
 	/**
 	 * removes a task from the list
 	 * @param index index at which to remove the task
-	 */
+	 *
 	public void removeTask(int index) {
 		taskList.removeElementAt(index);
 	}
-}
+}*/
