@@ -1,6 +1,6 @@
 package organization;
 
-import java.util.ArrayList;
+import java.util.Vector;
 
 /**
  * An implementation of a tree data type.
@@ -12,29 +12,37 @@ import java.util.ArrayList;
 public class TreeNode {
 	
 	private Task task;
-	private ArrayList<Task> children = new ArrayList<>();
+	private Vector<Task> children = new Vector<>(10, 10);
 	private Task parent;
 	
 	TreeNode() {
-		this.task = new Task();
+		try {
+			this.task = new Task();
+		} catch (StackOverflowError e) {
+			e.printStackTrace();
+		}
 	}
 	
 	TreeNode(Task data) {
 		this.task = data;
 	}
 	
-	void addChild(Task data) {
+	public void addChild(Task data) {
 		data.setParent(this.getTask());
 		children.add(data);
 	}
 	
-	void addChildren(ArrayList<Task> children) {
+	public void addChildren(Vector<Task> children) {
 		for (Task t: children)
 			t.setParent(this.getTask());
 		this.children.addAll(children);
 	}
 	
-	public ArrayList<Task> getChildren() {
+	public int getNumChildren() {
+		return children.size();
+	}
+	
+	public Vector<Task> getChildren() {
 		return children;
 	}
 	

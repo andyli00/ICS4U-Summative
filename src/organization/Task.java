@@ -1,6 +1,6 @@
 package organization;
 
-import java.util.ArrayList;
+import java.util.Vector;
 
 /**
  * Basic class for task. This is the ancestor of Project
@@ -18,7 +18,7 @@ public class Task extends TreeNode {
 	private final boolean isProject;
 	private String name;
 	private int size;
-	private ArrayList<Task> taskList;
+	private Vector<Task> taskList;
 	
 	private TreeNode tree;
 	
@@ -27,7 +27,7 @@ public class Task extends TreeNode {
 	 * Sets name as "untitled"
 	 */
 	public Task() {
-		this.name = "untitled";
+		name = "untitled";
 		isList = false;
 		isProject = false;
 		init();
@@ -54,7 +54,7 @@ public class Task extends TreeNode {
 		this.name = "untitled";
 		isList = true;
 		this.isProject = isProject;
-		taskList = new ArrayList<>(this.size);
+		taskList = new Vector<>(this.size, 10);
 		init();
 	}
 	
@@ -67,12 +67,16 @@ public class Task extends TreeNode {
 		this.name = name;
 		isList = true;
 		this.isProject = isProject;
-		taskList = new ArrayList<>(this.size);
+		taskList = new Vector<>(this.size, 10);
 		init();
 	}
 	
 	private void init() {
-		tree = new TreeNode(this);
+		try {
+			tree = new TreeNode(this);
+		} catch (Exception e){
+			e.printStackTrace();
+		}
 	}
 	
 	/**
@@ -101,6 +105,10 @@ public class Task extends TreeNode {
 	 */
 	public String getName() {
 		return name;
+	}
+	
+	public TreeNode getTreeNode() {
+		return this.tree;
 	}
 	
 	/**
@@ -152,7 +160,7 @@ public class Task extends TreeNode {
 	/**
 	 * @return this object's tasklist
 	 */
-	public ArrayList<Task> getTaskList() {
+	public Vector<Task> getTaskList() {
 		if (this.isList())
 			return taskList;
 		else

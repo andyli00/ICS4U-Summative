@@ -9,5 +9,7 @@ import features.NoteManager;
  * @since Nov 30, 2017
  */
 public class CommonManagement {
-	//asdf
+	public static void main(String[] args) {
+		new ProjectManager();
+	}
 }
