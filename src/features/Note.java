@@ -49,6 +49,7 @@ class Note {
 	 */
 	private void initializeComponents() {
 		window = new Stage(StageStyle.DECORATED);
+		window.setTitle("Note");
 		pane = new BorderPane();
 		Font f = Font.getDefault();
 		
@@ -88,7 +89,7 @@ class Note {
 		
 		pane.setTop(toolBar);
 		pane.setCenter(scrollPane);
-		pane.setBottom(null);
+		//pane.setBottom(null);
 		
 		window.initModality(Modality.WINDOW_MODAL);
 		window.setMinWidth(265);

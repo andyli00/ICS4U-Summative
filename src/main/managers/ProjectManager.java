@@ -1,25 +1,9 @@
-package main;
+package main.managers;
 
 import organization.Task;
-import organization.TreeNode;
 
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TreeView;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.text.Font;
-import javafx.scene.control.*;
-import javafx.scene.input.*;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
-import javafx.stage.StageStyle;
-
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.io.File;
-import java.util.Collection;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -30,10 +14,8 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
-import org.w3c.dom.Node;
 import org.w3c.dom.Element;
 import utilities.FxDialog;
 
@@ -45,24 +27,20 @@ import utilities.FxDialog;
  */
 public class ProjectManager {
 	
-	Stage window;
-	private BorderPane pane;
-	private ArrayList<Task> projects;
+	private static ArrayList<Task> projects;
 	
 	public ProjectManager() {
 		run();
 	}
 	
 	private void run() {
-		Task fruit = new Task("fruit", 2, false);
+		/*Task fruit = new Task("fruit", 2, false);
 		fruit.getTaskList().add(new Task("apples"));
 		fruit.getTaskList().add(new Task("grapes"));
-		fruit.getTreeNode().addChildren(fruit.getTaskList());
 		
 		Task clothes = new Task("clothes", 2, false);
 		clothes.getTaskList().add(new Task("jeans"));
 		clothes.getTaskList().add(new Task("shirts"));
-		clothes.getTreeNode().addChildren(fruit.getTaskList());
 		
 		projects = new ArrayList<>();
 		projects.add(new Task("Shopping", 3, true));
@@ -71,20 +49,23 @@ public class ProjectManager {
 		projects.get(0).getTaskList().add(new Task("get gas"));
 		projects.get(0).getTaskList().add(clothes);
 		
-		saveProjectData();
+		saveProjectData();*/
+		
+		
 	}
 	
 	private void saveProjectData() {
 		File projectFolder = new File(System.getProperty("user.home") + "/.common_management/projects");
+		
 		projectFolder.mkdirs();
 		File[] projectFiles = projectFolder.listFiles();
 		
-		for (File project: projectFiles) {
+		for (File project : projectFiles) {
 			if (project.isFile())
 				project.delete();
 		}
 		
-		int i = 0;
+		
 		for (Task task: projects) {
 			try {
 				DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
@@ -94,10 +75,10 @@ public class ProjectManager {
 				Element rootElement = document.createElement("project");
 				rootElement.setAttribute("completed", Boolean.toString(task.isProject()));
 				rootElement.setAttribute("size" , Integer.toString(task.getTaskList().size()));
-				rootElement.setAttribute("name", task.getTask().getName());
+				rootElement.setAttribute("name", task.getName());
 				document.appendChild(rootElement);
 				
-				ArrayList<Element> children = new ArrayList<>(task.getNumChildren());
+				ArrayList<Element> children = new ArrayList<>(task.getNumChildren(task));
 				for (Element e: children) {
 					createAttributes(children, document, task);
 				}
@@ -106,10 +87,9 @@ public class ProjectManager {
 				Transformer transformer = transformerFactory.newTransformer();
 				DOMSource source = new DOMSource(document);
 				
-				StreamResult result = new StreamResult(projectFiles[i].getAbsolutePath() + "/project" + i);
+				StreamResult result = new StreamResult(projectFolder.getAbsolutePath() + "/project_" + task.getName() + ".xml");
 				
 				transformer.transform(source, result);
-				i++;
 			} catch (ParserConfigurationException | TransformerException e) {
 				FxDialog.showError("Error saving project:", e.getMessage());
 			}
@@ -117,17 +97,19 @@ public class ProjectManager {
 	}
 	
 	private void createAttributes(ArrayList<Element> list, Document document, Task task) {
-		for (int i = 0; i < list.size(); i++) {
+		for (int i = 0; i < task.getTaskList().size(); i++) {
 			//adds the attribute "name"
-			list.set(i, document.createElement(task.getChildren().get(i).getName()));
+			list.set(i, document.createElement(task.getTaskList().get(i).getName()));
 			
 			//adds the attribute "completed" with value "true" or "false"
 			list.get(i).setAttribute("completed", Boolean.toString(task.getTaskList().get(i).isCompleted()));
 			
-			if (task.getTaskList().get(i).isList()) { //if this element is a todolist
-				list.get(i).setAttribute("size", Integer.toString(task.getTaskList().get(i).getTaskList().size()));
-				createAttributes(list, document, task.getTaskList().get(i)); //recursion!
-				document.appendChild(list.get(i));
+			if (task.isList()) { //if this element is a todolist
+				if (task.getTaskList().get(i).isList()) {
+					list.get(i).setAttribute("size", Integer.toString(task.getTaskList().get(i).getTaskList().size()));
+					createAttributes(list, document, task.getTaskList().get(i)); //recursion!
+					document.appendChild(list.get(i));
+				}
 			}
 			else { //if this element is just a plain task
 				document.appendChild(list.get(i));
@@ -161,5 +143,9 @@ public class ProjectManager {
 	
 	private void readAttributes(Task task, Document document) {
 		NodeList nodeList = document.getElementsByTagName(task.getName());
+	}
+	
+	public static ArrayList<Task> getProjects() {
+		return projects;
 	}
 }

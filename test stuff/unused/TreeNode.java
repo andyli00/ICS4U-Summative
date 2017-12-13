@@ -1,4 +1,4 @@
-package organization;
+/*package organization;
 
 import java.util.Vector;
 
@@ -9,18 +9,14 @@ import java.util.Vector;
  * @author Andy Li
  * @since Dec 04, 2017
  */
-public class TreeNode {
+/*public class TreeNode {
 	
 	private Task task;
 	private Vector<Task> children = new Vector<>(10, 10);
 	private Task parent;
 	
 	TreeNode() {
-		try {
-			this.task = new Task();
-		} catch (StackOverflowError e) {
-			e.printStackTrace();
-		}
+		this.task = new Task();
 	}
 	
 	TreeNode(Task data) {
@@ -61,4 +57,4 @@ public class TreeNode {
 	public Task getParent() {
 		return parent;
 	}
-}
+}*/

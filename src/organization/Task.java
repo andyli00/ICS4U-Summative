@@ -1,5 +1,6 @@
 package organization;
 
+import java.util.ArrayList;
 import java.util.Vector;
 
 /**
@@ -11,16 +12,17 @@ import java.util.Vector;
  * @author Andy Li
  * @since Nov 1, 2017
  */
-public class Task extends TreeNode {
+public class Task  {
 	
 	private boolean completed = false;
-	private final boolean isList;
-	private final boolean isProject;
+	private String type;
 	private String name;
 	private int size;
 	private Vector<Task> taskList;
 	
-	private TreeNode tree;
+	public static final String TASK = "TASK";
+	public static final String LIST = "LIST";
+	public static final String PROJECT = "PROJECT";
 	
 	/**
 	 * Constructor for a plain task
@@ -28,9 +30,7 @@ public class Task extends TreeNode {
 	 */
 	public Task() {
 		name = "untitled";
-		isList = false;
-		isProject = false;
-		init();
+		type = TASK;
 	}
 	
 	/**
@@ -39,9 +39,7 @@ public class Task extends TreeNode {
 	 */
 	public Task(String name) {
 		this.name = name;
-		isList = false;
-		isProject = false;
-		init();
+		type = TASK;
 	}
 	
 	/**
@@ -52,10 +50,11 @@ public class Task extends TreeNode {
 	public Task(int size, boolean isProject) {
 		this.size = size;
 		this.name = "untitled";
-		isList = true;
-		this.isProject = isProject;
+		if (isProject)
+			type = PROJECT;
+		else
+			type = LIST;
 		taskList = new Vector<>(this.size, 10);
-		init();
 	}
 	
 	/**
@@ -65,18 +64,11 @@ public class Task extends TreeNode {
 	public Task(String name, int size, boolean isProject) {
 		this.size = size;
 		this.name = name;
-		isList = true;
-		this.isProject = isProject;
+		if (isProject)
+			type = PROJECT;
+		else
+			type = LIST;
 		taskList = new Vector<>(this.size, 10);
-		init();
-	}
-	
-	private void init() {
-		try {
-			tree = new TreeNode(this);
-		} catch (Exception e){
-			e.printStackTrace();
-		}
 	}
 	
 	/**
@@ -90,14 +82,21 @@ public class Task extends TreeNode {
 	 * @return if this object represents a isList of tasks or just one
 	 */
 	public boolean isList() {
-		return isList;
+		return type.equals(LIST);
 	}
 	
 	/**
 	 * @return if this object is a project (i.e. cannot be part of a task list)
 	 */
 	public boolean isProject() {
-		return isProject;
+		return type.equals(PROJECT);
+	}
+	
+	/**
+	 * @return the type of this task object (project, list, or task)
+	 */
+	public String getType() {
+		return type;
 	}
 	
 	/**
@@ -105,10 +104,6 @@ public class Task extends TreeNode {
 	 */
 	public String getName() {
 		return name;
-	}
-	
-	public TreeNode getTreeNode() {
-		return this.tree;
 	}
 	
 	/**
@@ -134,10 +129,6 @@ public class Task extends TreeNode {
 	 */
 	public void addNewTask(Task t, int index) {
 		taskList.set(index, t);
-		if (t.isList())
-			this.addChildren(t.getTaskList());
-		else
-			this.addChild(t);
 	}
 	
 	/**
@@ -149,15 +140,6 @@ public class Task extends TreeNode {
 	}
 	
 	/**
-	 * Returns a task
-	 * @param index the index of the task
-	 * @return a task object
-	 */
-	public Task getTask(int index) {
-		return taskList.get(index);
-	}
-	
-	/**
 	 * @return this object's tasklist
 	 */
 	public Vector<Task> getTaskList() {
@@ -165,5 +147,26 @@ public class Task extends TreeNode {
 			return taskList;
 		else
 			return null;
+	}
+	
+	/**
+	 * Uses recursion to count the number of tasks/tasklists in a task object
+	 * @param task a task object, usually a project
+	 * @return the number of tasks/tasklists
+	 */
+	public int getNumChildren(Task task) {
+		int count = 0;
+		for (Task t: task.getTaskList()) {
+			count += 1;
+			if (t.isList()) {
+				count += getNumChildren(t);
+			}
+		}
+		return count;
+	}
+	
+	//TODO finish this method using recursion when implementation of saving project data is continued
+	public ArrayList<Task> getAllTasks(Task task) {
+		return null;
 	}
 }
