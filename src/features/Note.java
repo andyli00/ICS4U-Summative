@@ -89,7 +89,6 @@ class Note {
 		
 		pane.setTop(toolBar);
 		pane.setCenter(scrollPane);
-		//pane.setBottom(null);
 		
 		window.initModality(Modality.WINDOW_MODAL);
 		window.setMinWidth(265);

@@ -34,7 +34,7 @@ public class ProjectManager {
 	}
 	
 	private void run() {
-		/*Task fruit = new Task("fruit", 2, false);
+		Task fruit = new Task("fruit", 2, false);
 		fruit.getTaskList().add(new Task("apples"));
 		fruit.getTaskList().add(new Task("grapes"));
 		
@@ -49,7 +49,7 @@ public class ProjectManager {
 		projects.get(0).getTaskList().add(new Task("get gas"));
 		projects.get(0).getTaskList().add(clothes);
 		
-		saveProjectData();*/
+		//saveProjectData();
 		
 		
 	}

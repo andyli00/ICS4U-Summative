@@ -11,6 +11,7 @@ import javafx.scene.text.Text;
 import java.util.Vector;
 
 /**
+ *
  * @author Andy Li
  * @since Dec 11, 2017
  */
@@ -24,7 +25,7 @@ public class TopToolBar extends HBox {
 		Text text = new Text("Common Management System");
 		text.setFont(Font.font("Arial", FontWeight.BOLD, 20));
 		getChildren().add(text);
-		setPrefSize(1600, 150);
+		//setPrefSize(1600, 150);
 		updateContents();
 	}
 	
