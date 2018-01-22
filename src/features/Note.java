@@ -1,15 +1,14 @@
 package features;
 
-import utilities.FxDialog;
+import utilities.Dialog;
 
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextArea;
+import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Font;
-import javafx.scene.control.*;
 import javafx.scene.input.*;
+import javafx.scene.image.Image;
+
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -93,6 +92,7 @@ class Note {
 		window.initModality(Modality.WINDOW_MODAL);
 		window.setMinWidth(265);
 		window.setMinHeight(125);
+		window.getIcons().add(new Image("/resources/CMS.jpg"));
 		window.setScene(new Scene(pane));
 		window.show();
 	}
@@ -150,7 +150,7 @@ class Note {
 	 * calls the delete method
 	 */
 	private void deleteButtonClicked() {
-		if (FxDialog.showConfirmation("Are you sure?", "You are about to delete a note. This cannot be undone.").equals(FxDialog.OK))
+		if (Dialog.showConfirmation("Are you sure?", "You are about to delete a note. This cannot be undone.").equals(Dialog.OK))
 			delete();
 	}
 }

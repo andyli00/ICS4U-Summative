@@ -1,16 +1,18 @@
 package features;
 
-import utilities.FxDialog;
+import utilities.Dialog;
 
-import java.util.ArrayList;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.FileNotFoundException;
+
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.ByteBuffer;
+
+import java.util.ArrayList;
 
 /**
  * Class that manages notes
@@ -71,7 +73,7 @@ public class NoteManager {
 				try {
 					create(readFile(note.getPath(), Charset.forName("UTF-8")));
 				} catch (IOException e) {
-					FxDialog.showError("Error loading note:", e.getMessage());
+					Dialog.showError("Error loading note:", e.getMessage());
 				}
 			}
 	}
@@ -96,7 +98,7 @@ public class NoteManager {
 				writer.write(note.getText());
 				writer.close();
 			} catch (FileNotFoundException e) {
-				FxDialog.showError("Error saving note:", e.getMessage());
+				Dialog.showError("Error saving note:", e.getMessage());
 			}
 		}
 	}

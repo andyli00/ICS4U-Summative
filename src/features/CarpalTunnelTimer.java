@@ -1,5 +1,8 @@
 package features;
 
+import javafx.application.Platform;
+import utilities.Dialog;
+
 /**
  * A timer that reminds you to take a break from typing
  * @author Andy Li
@@ -7,31 +10,32 @@ package features;
  */
 public class CarpalTunnelTimer {
 	
-	private boolean finished = false;
-	
 	/**
 	 * Creates a Thread that waits for a specified time
 	 * @param timeInSeconds how long to wait, in seconds
 	 */
 	public CarpalTunnelTimer(int timeInSeconds) {
+		//using a Thread won't work because only
+		//the FX thread can modify ui elements
 		
-		Thread t = new Thread(() -> {
-			try {
-				Thread.sleep(timeInSeconds * 1000);
-				finished = true;
-			}
-			catch (InterruptedException e) {
-				e.printStackTrace();
+		Platform.runLater(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					Thread.sleep(timeInSeconds * 1000);
+					timerFinished();
+				}
+				catch (InterruptedException e) {
+					e.printStackTrace();
+				}
 			}
 		});
-		
-		t.start();
 	}
 	
 	/**
-	 * @return whether or not the timer is done
+	 * shows a dialog box
 	 */
-	private boolean isFinished() {
-		return finished;
+	private void timerFinished() {
+		Dialog.showInformation("Your timer is finished");
 	}
 }

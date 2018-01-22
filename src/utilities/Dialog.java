@@ -10,7 +10,7 @@ import java.util.Optional;
  * @author Andy Li
  * @since Dec 04, 2017
  */
-public class FxDialog {
+public class Dialog {
 	
 	/**
 	 * shows an error message
@@ -57,5 +57,33 @@ public class FxDialog {
 			return CANCEL;
 		else
 			return result.get().getText();
+	}
+	
+	/**
+	 * Shows an information box
+	 * @param info A string to be shown in the info box
+	 */
+	public static void showInformation(String info) {
+		Alert alert = new Alert(Alert.AlertType.INFORMATION);
+		alert.setTitle("Information");
+		alert.setHeaderText(null);
+		alert.setContentText(info);
+		
+		alert.showAndWait();
+	}
+	
+	/**
+	 * Gets a string input
+	 * @param prompt A string prompt for the user
+	 * @return The user's string input
+	 */
+	public static String getInput(String prompt) {
+		TextInputDialog textInputDialog = new TextInputDialog();
+		textInputDialog.setTitle("Input");
+		textInputDialog.setHeaderText(null);
+		textInputDialog.setContentText(prompt);
+		
+		Optional<String> result = textInputDialog.showAndWait();
+		return result.orElse(null);
 	}
 }

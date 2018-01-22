@@ -4,22 +4,24 @@ import java.util.ArrayList;
 import java.util.Vector;
 
 /**
- * Basic class for task. This is the ancestor of Project
+ * Basic class for task.
  * A task can either represent a single task or a todolist.
  * This is specified by using a constructor with or without the parameter size
  * A task can also be a project, which just means it shouldn't be an element
  * of another todolist
+ *
  * @author Andy Li
  * @since Nov 1, 2017
  */
-public class Task  {
+public class Task {
 	
 	private boolean completed = false;
-	private String type;
 	private String name;
 	private int size;
 	private Vector<Task> taskList;
 	
+	private String type;
+	//some constants to help with indentification
 	public static final String TASK = "TASK";
 	public static final String LIST = "LIST";
 	public static final String PROJECT = "PROJECT";
@@ -35,7 +37,7 @@ public class Task  {
 	
 	/**
 	 * Constructor for a plain task
-	 * @param name name of the task
+	 * @param name Name of the task
 	 */
 	public Task(String name) {
 		this.name = name;
@@ -45,62 +47,56 @@ public class Task  {
 	/**
 	 * Constructor for a TodoList
 	 * Sets name as "untitled"
-	 * @param size size of isList
+	 * @param size Size of isList
 	 */
 	public Task(int size, boolean isProject) {
 		this.size = size;
 		this.name = "untitled";
-		if (isProject)
-			type = PROJECT;
-		else
-			type = LIST;
+		type = isProject ? PROJECT : LIST;
 		taskList = new Vector<>(this.size, 10);
 	}
 	
 	/**
 	 * Constructor for a TodoList
-	 * @param size size of isList
+	 * @param size Size of isList
 	 */
 	public Task(String name, int size, boolean isProject) {
 		this.size = size;
 		this.name = name;
-		if (isProject)
-			type = PROJECT;
-		else
-			type = LIST;
+		type = isProject ? PROJECT : LIST;
 		taskList = new Vector<>(this.size, 10);
 	}
 	
 	/**
-	 * @return if the task is completed or not
+	 * @return If the task is completed or not
 	 */
 	public boolean isCompleted() {
 		return completed;
 	}
 	
 	/**
-	 * @return if this object represents a isList of tasks or just one
+	 * @return If this object represents a isList of tasks or just one
 	 */
 	public boolean isList() {
 		return type.equals(LIST);
 	}
 	
 	/**
-	 * @return if this object is a project (i.e. cannot be part of a task list)
+	 * @return If this object is a project (i.e. cannot be part of a task list)
 	 */
 	public boolean isProject() {
 		return type.equals(PROJECT);
 	}
 	
 	/**
-	 * @return the type of this task object (project, list, or task)
+	 * @return The type of this task object (only every the constants project, list, or task)
 	 */
 	public String getType() {
 		return type;
 	}
 	
 	/**
-	 * @return the task's name
+	 * @return The task's name
 	 */
 	public String getName() {
 		return name;
@@ -124,8 +120,8 @@ public class Task  {
 	/**
 	 * Adds a new task to the taskList at the specified index
 	 * This task object could also be a todolist
-	 * @param t 	a task object
-	 * @param index the index to add at
+	 * @param t 	A task object to be added to the list
+	 * @param index The index to add at
 	 */
 	public void addNewTask(Task t, int index) {
 		taskList.set(index, t);
@@ -133,40 +129,73 @@ public class Task  {
 	
 	/**
 	 * Marks a task complete
-	 * @param index the index that the task located is
+	 * @param index The index that the task located is
 	 */
 	public void markTaskComplete(int index) {
 		taskList.get(index).markComplete();
 	}
 	
 	/**
-	 * @return this object's tasklist
+	 * @return This Task object's tasklist
 	 */
 	public Vector<Task> getTaskList() {
-		if (this.isList())
-			return taskList;
-		else
-			return null;
+		return taskList;
 	}
+	
+	/*
+	 * The following few methods were mostly used for bug testing and shouldn't
+	 * be called by the main application, but I'm keeping them here because
+	 * it's better to have it and not need it than need it and not have it.
+	 */
 	
 	/**
 	 * Uses recursion to count the number of tasks/tasklists in a task object
-	 * @param task a task object, usually a project
-	 * @return the number of tasks/tasklists
+	 * @param task A task object, usually a project
+	 * @return The number of tasks/tasklists contained by
 	 */
-	public int getNumChildren(Task task) {
+	public static int getNumChildren(Task task) {
 		int count = 0;
 		for (Task t: task.getTaskList()) {
-			count += 1;
-			if (t.isList()) {
+			count++;
+			if (t.isList())
 				count += getNumChildren(t);
-			}
 		}
 		return count;
 	}
 	
-	//TODO finish this method using recursion when implementation of saving project data is continued
-	public ArrayList<Task> getAllTasks(Task task) {
-		return null;
+	
+	/**
+	 * Gets all lists and tasks under a task object in a single vector
+	 * @param task A task object
+	 * @return A vector containing all the task objects
+	 */
+	public static Vector<Task> getAllTasks(Task task) {
+		Vector<Task> list = new Vector<>(10, 1);
+		for (Task t: task.getTaskList()) {
+			if (t.isList())
+				list.addAll(getAllTasks(t));
+			else
+				list.add(t);
+		}
+		list.trimToSize();
+		return list;
+	}
+	
+	/**
+	 * Creates a String containing every task/list in a given task along with the type
+	 * @param task A task object
+	 * @return A String in the format
+	 * 			TYPE: name
+	 * 			TYPE: name... etc
+	 */
+	public static String toString(Task task) {
+		StringBuilder temp = new StringBuilder(task.getType() + ": " + task.getName() + "\n");
+		for (Task t: task.getTaskList()) {
+			if (t.isList())
+				temp.append(toString(t));
+			else
+				temp.append(t.getType()).append(": ").append(t.getName()).append("\n");
+		}
+		return temp.toString();
 	}
 }

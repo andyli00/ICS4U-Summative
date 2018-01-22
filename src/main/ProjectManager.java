@@ -1,13 +1,13 @@
-package main.managers;
-
-import organization.Task;
+package main;
 
 import java.util.ArrayList;
 import java.io.File;
+import java.util.Vector;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.TransformerException;
@@ -17,38 +17,46 @@ import javax.xml.transform.stream.StreamResult;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Element;
-import utilities.FxDialog;
+
+import organization.Task;
+import utilities.Dialog;
 
 
 /**
- * A class to create and manage project and task objects
+ * A class to create and manage task objects
  * @author Andy Li
  * @since Dec 04, 2017
  */
 public class ProjectManager {
 	
-	private static ArrayList<Task> projects;
+	private static Vector<Task> projects;
 	
 	public ProjectManager() {
 		run();
 	}
 	
 	private void run() {
-		Task fruit = new Task("fruit", 2, false);
-		fruit.getTaskList().add(new Task("apples"));
-		fruit.getTaskList().add(new Task("grapes"));
+		Task fruit = new Task("Fruit", 2, false);
+		fruit.getTaskList().add(new Task("Apples"));
+		fruit.getTaskList().add(new Task("Grapes"));
 		
-		Task clothes = new Task("clothes", 2, false);
-		clothes.getTaskList().add(new Task("jeans"));
-		clothes.getTaskList().add(new Task("shirts"));
+		Task clothes = new Task("Buy clothes", 2, false);
+		clothes.getTaskList().add(new Task("Jeans"));
+		clothes.getTaskList().add(new Task("Shirts"));
 		
-		projects = new ArrayList<>();
-		projects.add(new Task("Shopping", 3, true));
-		projects.get(0).getTaskList().add(new Task("Groceries", 2, false));
-		projects.get(0).getTaskList().get(0).getTaskList().addAll(fruit.getTaskList());
-		projects.get(0).getTaskList().add(new Task("get gas"));
-		projects.get(0).getTaskList().add(clothes);
+		Task shopping = new Task("Shopping", 3, true);
 		
+		Task groceries = new Task("Groceries", 2, false);
+		
+		groceries.getTaskList().add(fruit);
+		shopping.getTaskList().add(groceries);
+		shopping.getTaskList().add(new Task("Refill gas"));
+		shopping.getTaskList().add(clothes);
+		
+		projects = new Vector<>();
+		projects.add(shopping);
+		System.out.println(Task.getNumChildren(shopping));
+		System.out.println(Task.toString(shopping));
 		//saveProjectData();
 		
 		
@@ -78,7 +86,7 @@ public class ProjectManager {
 				rootElement.setAttribute("name", task.getName());
 				document.appendChild(rootElement);
 				
-				ArrayList<Element> children = new ArrayList<>(task.getNumChildren(task));
+				ArrayList<Element> children = new ArrayList<>(Task.getNumChildren(task));
 				for (Element e: children) {
 					createAttributes(children, document, task);
 				}
@@ -91,7 +99,7 @@ public class ProjectManager {
 				
 				transformer.transform(source, result);
 			} catch (ParserConfigurationException | TransformerException e) {
-				FxDialog.showError("Error saving project:", e.getMessage());
+				Dialog.showError("Error saving project:", e.getMessage());
 			}
 		}
 	}
@@ -136,7 +144,7 @@ public class ProjectManager {
 				i++;
 			}
 			catch (Exception e){
-				FxDialog.showError("Error", e.getMessage());
+				Dialog.showError("Error", e.getMessage());
 			}
 		}
 	}
@@ -145,7 +153,20 @@ public class ProjectManager {
 		NodeList nodeList = document.getElementsByTagName(task.getName());
 	}
 	
-	public static ArrayList<Task> getProjects() {
+	public static Vector<Task> getProjects() {
 		return projects;
+	}
+	
+	public static void removeTaskFromProject(int index, Task t) {
+		if (projects.get(index).getTaskList().contains(t))
+			projects.get(index).getTaskList().remove(t);
+		else
+			for (Task task: t.getTaskList()) {
+				if (projects.get(index).getTaskList().contains(task))
+					projects.get(index).getTaskList().remove(task);
+				else
+					removeTaskFromProject(index, task);
+			}
+		
 	}
 }

@@ -1,33 +1,39 @@
 package main;
 
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.stage.Modality;
-import main.components.*;
-
+import javafx.scene.control.ScrollPane;
+import javafx.scene.image.Image;
+import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.application.Application;
 
+import main.components.*;
+
 /**
- * GUI for the main application
+ * GUI for the mainApplication application
  * @author Andy Li
  * @since Nov 30, 2017
  */
 public class CommonManagement extends Application {
 	
 	private Stage window;
-	//no pane, no gain (heh)
-	public static MainGridPane mainGridPane;
-	public static SecondaryGridPane secondaryGridPane;
-	public static TopToolBar topBar;
-	public static LeftSideBar leftSideBar;
+	private ProjectManager pm = new ProjectManager();
+	private VBox mainApplication;
+	private TopToolBar topBar = new TopToolBar();
+	private ProjectTreeView treeView;
 	
 	
 	@Override
 	public void start(Stage primaryStage) {
 		window = primaryStage;
 		initializeComponents();
-		window.setScene(new Scene(mainGridPane));
+		window.setTitle("CMS");
+		window.setScene(new Scene(mainApplication));
+		window.getIcons().add(new Image("/resources/CMS.jpg"));
+		
 		window.show();
 	}
 	
@@ -35,23 +41,19 @@ public class CommonManagement extends Application {
 		launch(args);
 	}
 	
+	/**
+	 *
+	 */
 	private void initializeComponents() {
 		window.initStyle(StageStyle.DECORATED);
 		
-		topBar = new TopToolBar();
-		topBar.updateContents();
-		leftSideBar = new LeftSideBar();
-		secondaryGridPane = new SecondaryGridPane();
-		mainGridPane = new MainGridPane();
+		Text title = new Text("Common Management System");
+		title.setStyle("-fx-font: 18 western; -fx-fill: blue");
 		
-		mainGridPane.add(topBar, 0, 0);
-		mainGridPane.add(leftSideBar, 0, 1);
-		mainGridPane.add(secondaryGridPane, 1, 1);
+		treeView = new ProjectTreeView(ProjectManager.getProjects().get(0));
 		
-		/*window.initModality(Modality.APPLICATION_MODAL);
-		window.setMaxHeight(900);
-		window.setMinHeight(720);
-		window.setMaxWidth(1600);
-		window.setMaxWidth(1280);*/
+		mainApplication = new VBox(title, topBar, new ScrollPane(treeView));
+		mainApplication.setAlignment(Pos.BASELINE_CENTER);
+		mainApplication.setSpacing(10);
 	}
 }

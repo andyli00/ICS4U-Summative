@@ -1,14 +1,14 @@
 package main.components;
 
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
-import javafx.scene.control.Separator;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
-import javafx.scene.text.Text;
 
-import java.util.Vector;
+import features.CarpalTunnelTimer;
+import features.NoteManager;
+import utilities.Dialog;
 
 /**
  *
@@ -17,22 +17,36 @@ import java.util.Vector;
  */
 public class TopToolBar extends HBox {
 	
-	public Vector<Button> buttons = new Vector<>(5, 1);
-	
 	public TopToolBar() {
 		super();
-		setPadding(new Insets(10, 10, 10, 0));
-		Text text = new Text("Common Management System");
-		text.setFont(Font.font("Arial", FontWeight.BOLD, 20));
-		getChildren().add(text);
-		//setPrefSize(1600, 150);
-		updateContents();
+		setPadding(new Insets(10, 10, 10, 10));
+		setSpacing(10);
+		setAlignment(Pos.CENTER);
+		
+		Button stickyNotes = new Button("Sticky Note");
+		stickyNotes.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> stickyNotesClicked());
+		stickyNotes.setStyle("-fx-font: 16 sans-serif");
+		
+		Button timer = new Button("Timer");
+		timer.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> timerClicked());
+		timer.setStyle("-fx-font: 16 sans-serif");
+		
+		getChildren().addAll(stickyNotes, timer);
+		
 	}
 	
-	public void updateContents() {
-		getChildren().remove(1, getChildren().size());
-		for (Button b: buttons) {
-			getChildren().addAll(new Separator(), b);
-		}
+	/**
+	 * creates a note manager object
+	 */
+	private void stickyNotesClicked() {
+		new NoteManager();
+	}
+	
+	/**
+	 * starts a timer
+	 */
+	//TODO implement a more user-friendly way of inputting time
+	private void timerClicked() {
+		new CarpalTunnelTimer(Integer.parseInt(Dialog.getInput("How long? (in seconds)")));
 	}
 }
